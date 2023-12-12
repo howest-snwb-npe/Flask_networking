@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from netmiko import ConnectHandler
 import json, requests
+from ncclient import manager
 
 app = Flask(__name__)
 
@@ -24,6 +25,21 @@ def restconf():
     # print( r.text )
     # print( json.dumps(r.json(), indent=4) )
     output = json.dumps(r.json(), indent=4)
+    return render_template("index.html", output=output)
+
+@app.route("/netconf")
+def netconf():
+    netconf_filter = """
+    <filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native" />
+    </filter>
+    """    
+    with manager.connect(host="192.168.0.119", username="k", password="Test123!", device_params={'name':"iosxe"}) as m:
+        # for capability in m.server_capabilities:
+        #     print(capability)
+        r = m.get_config('running', netconf_filter)
+
+    output = r.xml
     return render_template("index.html", output=output)
 
 
