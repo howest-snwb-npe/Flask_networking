@@ -19,10 +19,10 @@ def netmiko():
 @app.route("/restconf")
 def restconf():
     headers = {"Accept": "application/yang-data+json"}
-    r = requests.get("https://192.168.0.119/restconf/data/ietf-yang-library:modules-state", 
+    r = requests.get("https://192.168.0.119/restconf/data/Cisco-IOS-XE-native:native", 
                      auth=("k","Test123!"), headers=headers, verify=False)
-    print( r.text )
-    print( json.dumps(r.json(), indent=4) )
+    # print( r.text )
+    # print( json.dumps(r.json(), indent=4) )
     output = json.dumps(r.json(), indent=4)
     return render_template("index.html", output=output)
 
